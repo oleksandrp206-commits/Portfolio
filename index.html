@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matvey Orlov — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151a;
+    --surface:#1b1f27;
+    --surface-2:#232833;
+    --text:#eae7df;
+    --muted:#98a0ac;
+    --accent:#f2b134;
+    --accent-2:#5fc9b8;
+    --border:#2c313c;
+    --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 20px 40px -24px rgba(0,0,0,.6);
+    --radius: 22px;
+  }
+  :root[data-theme="light"]{
+    --bg:#eef0f1;
+    --surface:#ffffff;
+    --surface-2:#f4f5f6;
+    --text:#14171c;
+    --muted:#5b6270;
+    --border:#dde1e4;
+    --shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 20px 40px -24px rgba(20,23,28,.18);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease, color .25s ease;
+    min-height:100vh;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', system-ui, sans-serif;
+    margin:0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;text-decoration:none;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  .wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:56px 24px 80px;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:36px;
+    gap:12px;
+  }
+  .brand{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--accent-2);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent-2) 20%, transparent);
+  }
+  .switches{
+    display:flex;
+    gap:10px;
+  }
+  .switch-btn{
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--muted);
+    border-radius:999px;
+    padding:8px 14px;
+    font-size:13px;
+    font-family:'IBM Plex Mono', monospace;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .switch-btn:hover{border-color:var(--accent-2); color:var(--text);}
+  .switch-btn:focus-visible, a:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent-2);
+    outline-offset:2px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(12, 1fr);
+    gap:16px;
+  }
+  .tile{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:28px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* --- hero / intro --- */
+  .tile-intro{
+    grid-column:1 / 8;
+    grid-row:1 / 3;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    background:
+      radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+      var(--surface);
+  }
+  .tile-intro .role{
+    color:var(--muted);
+    font-size:15px;
+    margin-bottom:14px;
+  }
+  .tile-intro h1{
+    font-size:44px;
+    line-height:1.08;
+    max-width:20ch;
+  }
+  .tile-intro .lede{
+    margin-top:18px;
+    max-width:46ch;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.55;
+  }
+  .tile-intro .cta-row{
+    display:flex;
+    gap:12px;
+    margin-top:24px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 18px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:500;
+    border:1px solid transparent;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#14100a;
+  }
+  .btn-ghost{
+    border-color:var(--border);
+    color:var(--text);
+  }
+  .btn-ghost:hover{border-color:var(--accent-2);}
+
+  /* --- status --- */
+  .tile-status{
+    grid-column:8 / 13;
+    grid-row:1 / 2;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:10px;
+  }
+  .status-line{display:flex; align-items:center; gap:10px;}
+  .pulse{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--accent-2);
+    box-shadow:0 0 0 0 color-mix(in srgb, var(--accent-2) 60%, transparent);
+    animation:pulse 2.4s ease-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce){ .pulse{animation:none;} }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent-2) 50%, transparent);}
+    70%{box-shadow:0 0 0 10px color-mix(in srgb, var(--accent-2) 0%, transparent);}
+    100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent-2) 0%, transparent);}
+  }
+  .tile-status .headline{font-size:15px; font-weight:500;}
+  .tile-status .sub{font-size:13px; color:var(--muted);}
+  .tile-status .location{
+    margin-top:6px;
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  /* --- code-signature tile --- */
+  .tile-mark{
+    grid-column:8 / 13;
+    grid-row:2 / 3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--surface-2);
+  }
+  .code-sig{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    line-height:1.9;
+    text-align:left;
+  }
+  .code-sig .l1, .code-sig .l3{color:var(--muted);}
+  .code-sig .l2{color:var(--accent-2); padding-left:1.4em;}
+
+  /* --- projects --- */
+  .tile-project{
+    grid-column: span 4;
+    grid-row: span 2;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:250px;
+  }
+  .tile-project .top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+  .tile-project .kind{
+    font-size:12px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .tile-project h3{
+    font-size:20px;
+    margin-top:14px;
+  }
+  .tile-project p{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.5;
+    margin:10px 0 0;
+  }
+  .stack-row{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    padding:4px 9px;
+    border-radius:999px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--muted);
+  }
+  .arrow-mark{
+    font-size:18px;
+    color:var(--muted);
+    transition:transform .2s ease, color .2s ease;
+  }
+  .tile-project:hover .arrow-mark{
+    transform:translate(3px,-3px);
+    color:var(--accent-2);
+  }
+
+  /* --- stack tile --- */
+  .tile-stack{
+    grid-column: span 4;
+    grid-row: span 2;
+    display:flex;
+    flex-direction:column;
+  }
+  .tile-stack h3{font-size:16px; margin-bottom:16px; color:var(--muted); font-family:'IBM Plex Sans',sans-serif; font-weight:500;}
+  .stack-list{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    flex:1;
+  }
+  .stack-list .row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+  }
+  .stack-list .row:last-child{border-bottom:none;}
+  .stack-list .label{font-family:'IBM Plex Mono', monospace; font-size:13px;}
+  .stack-list .years{color:var(--muted); font-size:13px;}
+
+  /* --- writing --- */
+  .tile-writing{
+    grid-column: span 7;
+  }
+  .tile-writing h3{font-size:16px; color:var(--muted); font-weight:500; margin-bottom:16px;}
+  .article-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .article-row:last-child{border-bottom:none;}
+  .article-row .title{font-size:15px;}
+  .article-row .date{font-size:12.5px; color:var(--muted); font-family:'IBM Plex Mono', monospace; white-space:nowrap; margin-left:16px;}
+
+  /* --- contact --- */
+  .tile-contact{
+    grid-column: span 5;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .tile-contact h3{font-size:20px; margin-bottom:8px;}
+  .tile-contact p{color:var(--muted); font-size:14px; margin:0 0 18px;}
+  .contact-links{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .contact-links a{
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .contact-links a:last-child{border-bottom:none;}
+  .contact-links a span.hint{color:var(--muted); font-family:'IBM Plex Mono', monospace; font-size:12px;}
+  .contact-links a:hover{color:var(--accent-2);}
+
+  footer{
+    margin-top:16px;
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:12.5px;
+    font-family:'IBM Plex Mono', monospace;
+    padding:0 4px;
+  }
+
+  @media (max-width:860px){
+    .grid{grid-template-columns:1fr;}
+    .tile-intro, .tile-status, .tile-mark, .tile-project, .tile-stack, .tile-writing, .tile-contact{
+      grid-column:1 / -1 !important;
+      grid-row:auto !important;
+    }
+    .tile-intro h1{font-size:32px;}
+    footer{flex-direction:column; gap:6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span><span data-i18n="brand">Matvey Orlov</span></div>
+    <div class="switches">
+      <button class="switch-btn" id="langToggle" aria-label="Switch language">
+        <span id="langLabel">RU</span>
+      </button>
+      <button class="switch-btn" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">☾</span><span id="themeLabel" data-i18n="themeDark">dark</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="tile tile-intro">
+      <div>
+        <div class="role" data-i18n="role">Frontend developer · React / TypeScript</div>
+        <h1 data-i18n="heroTitle">I build interfaces that don't lag — or look like a template</h1>
+        <p class="lede" data-i18n="heroLede">Five years building product interfaces for analytics, fintech and internal tools. I take a task from design to production — including the parts usually left to backend.</p>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#projects" data-i18n="ctaProjects">View projects</a>
+        <a class="btn btn-ghost" href="#contact" data-i18n="ctaContact">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="tile tile-status">
+      <div class="status-line">
+        <span class="pulse"></span>
+        <span class="headline" data-i18n="statusHeadline">Open for new projects</span>
+      </div>
+      <div class="sub" data-i18n="statusSub">Next open slot — October 12</div>
+      <div class="location" data-i18n="statusLocation">Dnipro, Ukraine · remote · UTC+3</div>
+    </div>
+
+    <div class="tile tile-mark">
+      <div class="code-sig">
+        <div class="l1">const dev = () => {</div>
+        <div class="l2">ship(good.code);</div>
+        <div class="l3">}</div>
+      </div>
+    </div>
+
+    <div id="projects" class="tile tile-project">
+      <div class="top">
+        <span class="kind" data-i18n="project1Kind">product · 2025</span>
+        <span class="arrow-mark">↗</span>
+      </div>
+      <div>
+        <h3>Nimbus</h3>
+        <p data-i18n="project1Desc">An analytics dashboard handling 40,000+ daily events — rewrote table rendering with virtualization, cutting response time from 900ms to 60ms.</p>
+      </div>
+      <div class="stack-row">
+        <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">D3</span>
+      </div>
+    </div>
+
+    <div class="tile tile-project">
+      <div class="top">
+        <span class="kind" data-i18n="project2Kind">product · 2024</span>
+        <span class="arrow-mark">↗</span>
+      </div>
+      <div>
+        <h3>Fielddesk</h3>
+        <p data-i18n="project2Desc">A CRM for field crews with offline mode: requests, routes and photos sync automatically once connection returns.</p>
+      </div>
+      <div class="stack-row">
+        <span class="chip">Vue</span><span class="chip">Pinia</span><span class="chip">IndexedDB</span>
+      </div>
+    </div>
+
+    <div class="tile tile-stack">
+      <h3 data-i18n="stackHeading">Core stack</h3>
+      <div class="stack-list">
+        <div class="row"><span class="label">React / Next.js</span><span class="years" data-i18n="years1">3 years</span></div>
+        <div class="row"><span class="label">TypeScript</span><span class="years" data-i18n="years2">4 years</span></div>
+        <div class="row"><span class="label">Vue 3</span><span class="years" data-i18n="years3">2 years</span></div>
+        <div class="row"><span class="label">Node / tRPC</span><span class="years" data-i18n="years4">3 years</span></div>
+        <div class="row"><span class="label" data-i18n="figmaLabel">Figma → code</span><span class="years" data-i18n="years5">5 years</span></div>
+      </div>
+    </div>
+
+    <div class="tile tile-writing">
+      <h3 data-i18n="writingHeading">Writing</h3>
+      <div class="article-row"><span class="title" data-i18n="article1">Why I stopped reaching for Redux on new projects</span><span class="date" data-i18n="date1">Aug 2026</span></div>
+      <div class="article-row"><span class="title" data-i18n="article2">Virtualizing 50k-row lists: a walkthrough from Nimbus</span><span class="date" data-i18n="date2">May 2026</span></div>
+      <div class="article-row"><span class="title" data-i18n="article3">Offline-first without the pain: sync patterns that hold up</span><span class="date" data-i18n="date3">Feb 2026</span></div>
+    </div>
+
+    <div id="contact" class="tile tile-contact">
+      <div>
+        <h3 data-i18n="contactHeading">Let's talk about your project</h3>
+        <p data-i18n="contactPara" >I reply within a day. Send project details up front — it helps me tell quickly whether I'm a good fit.</p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:orlov.dev@example.com"><span data-i18n="emailLabel">Email</span> <span class="hint">orlov.dev@example.com</span></a>
+        <a href="https://github.com/example" target="_blank" rel="noopener">GitHub <span class="hint">/example</span></a>
+        <a href="https://t.me/example" target="_blank" rel="noopener">Telegram <span class="hint">@example</span></a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span data-i18n="footerLeft">© 2026, Matvey Orlov</span>
+    <span data-i18n="footerRight">Bento portfolio · HTML / CSS / JS</span>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var dict = {
+      brand:            { en:"Matvey Orlov", ru:"Матвей Орлов" },
+      role:             { en:"Frontend developer · React / TypeScript", ru:"Frontend-разработчик · React / TypeScript" },
+      heroTitle:        { en:"I build interfaces that don't lag — or look like a template", ru:"Собираю интерфейсы, которые не тормозят и не выглядят как шаблон" },
+      heroLede:         { en:"Five years building product interfaces for analytics, fintech and internal tools. I take a task from design to production — including the parts usually left to backend.", ru:"Пять лет делаю продуктовые интерфейсы для аналитики, финтеха и внутренних инструментов. Забираю задачу от макета до продакшена — включая то, что обычно достаётся бэкенду." },
+      ctaProjects:      { en:"View projects", ru:"Смотреть проекты" },
+      ctaContact:       { en:"Get in touch", ru:"Написать" },
+      statusHeadline:   { en:"Open for new projects", ru:"Открыт для новых проектов" },
+      statusSub:        { en:"Next open slot — October 12", ru:"Следующий свободный слот — с 12 октября" },
+      statusLocation:   { en:"Dnipro, Ukraine · remote · UTC+3", ru:"Днепр, работаю удалённо · UTC+3" },
+      project1Kind:     { en:"product · 2025", ru:"продукт · 2025" },
+      project1Desc:     { en:"An analytics dashboard handling 40,000+ daily events — rewrote table rendering with virtualization, cutting response time from 900ms to 60ms.", ru:"Дэшборд аналитики для 40 000+ ежедневных событий — переписал рендер таблиц на виртуализации, время отклика упало с 900 мс до 60 мс." },
+      project2Kind:     { en:"product · 2024", ru:"продукт · 2024" },
+      project2Desc:     { en:"A CRM for field crews with offline mode: requests, routes and photos sync automatically once connection returns.", ru:"CRM для выездных бригад с офлайн-режимом: заявки, маршруты и фото синхронизируются, когда возвращается связь." },
+      stackHeading:     { en:"Core stack", ru:"Основной стек" },
+      years1:           { en:"3 years", ru:"3 года" },
+      years2:           { en:"4 years", ru:"4 года" },
+      years3:           { en:"2 years", ru:"2 года" },
+      years4:           { en:"3 years", ru:"3 года" },
+      years5:           { en:"5 years", ru:"5 лет" },
+      figmaLabel:       { en:"Figma → code", ru:"Figma → код" },
+      writingHeading:   { en:"Writing", ru:"Заметки" },
+      article1:         { en:"Why I stopped reaching for Redux on new projects", ru:"Почему я перестал использовать Redux в новых проектах" },
+      date1:            { en:"Aug 2026", ru:"авг 2026" },
+      article2:         { en:"Virtualizing 50k-row lists: a walkthrough from Nimbus", ru:"Виртуализация списков на 50k строк: разбор на примере Nimbus" },
+      date2:            { en:"May 2026", ru:"май 2026" },
+      article3:         { en:"Offline-first without the pain: sync patterns that hold up", ru:"Offline-first без боли: паттерны синхронизации" },
+      date3:            { en:"Feb 2026", ru:"фев 2026" },
+      contactHeading:   { en:"Let's talk about your project", ru:"Обсудим задачу?" },
+      contactPara:      { en:"I reply within a day. Send project details up front — it helps me tell quickly whether I'm a good fit.", ru:"Отвечаю в течение дня. Можно писать сразу с деталями проекта — так быстрее пойму, подхожу ли я." },
+      emailLabel:       { en:"Email", ru:"Почта" },
+      footerLeft:       { en:"© 2026, Matvey Orlov", ru:"© 2026, Матвей Орлов" },
+      footerRight:      { en:"Bento portfolio · HTML / CSS / JS", ru:"Bento-портфолио · HTML / CSS / JS" },
+      themeDark:        { en:"dark", ru:"тёмная" },
+      themeLight:       { en:"light", ru:"светлая" }
+    };
+
+    var root = document.documentElement;
+    var htmlEl = document.getElementById('htmlRoot');
+    var langBtn = document.getElementById('langToggle');
+    var langLabel = document.getElementById('langLabel');
+    var themeBtn = document.getElementById('themeToggle');
+    var themeIcon = document.getElementById('themeIcon');
+    var themeLabel = document.getElementById('themeLabel');
+
+    var currentLang = 'en';
+    var savedLang = null, savedTheme = null;
+    try { savedLang = localStorage.getItem('portfolio-lang'); } catch(e) {}
+    try { savedTheme = localStorage.getItem('portfolio-theme'); } catch(e) {}
+
+    function applyLang(lang){
+      currentLang = lang;
+      htmlEl.setAttribute('lang', lang);
+      langLabel.textContent = (lang === 'en') ? 'RU' : 'EN';
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key][lang];
+      });
+    }
+
+    function applyTheme(theme){
+      if (theme === 'light'){
+        root.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '☀';
+      } else {
+        root.removeAttribute('data-theme');
+        themeIcon.textContent = '☾';
+      }
+      themeLabel.setAttribute('data-i18n', theme === 'light' ? 'themeLight' : 'themeDark');
+      themeLabel.textContent = dict[theme === 'light' ? 'themeLight' : 'themeDark'][currentLang];
+    }
+
+    applyLang(savedLang === 'ru' ? 'ru' : 'en');
+    applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+
+    langBtn.addEventListener('click', function(){
+      var next = currentLang === 'en' ? 'ru' : 'en';
+      applyLang(next);
+      try { localStorage.setItem('portfolio-lang', next); } catch(e) {}
+    });
+
+    themeBtn.addEventListener('click', function(){
+      var isLight = root.getAttribute('data-theme') === 'light';
+      var next = isLight ? 'dark' : 'light';
+      applyTheme(next);
+      try { localStorage.setItem('portfolio-theme', next); } catch(e) {}
+    });
+  })();
+</script>
+</body>
+</html>
